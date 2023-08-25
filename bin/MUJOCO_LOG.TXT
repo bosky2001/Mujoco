@@ -1,0 +1,18 @@
+Fri Jun 23 15:33:16 2023
+WARNING: Nan, Inf or huge value in QACC at DOF 4. The simulation is unstable. Time = 1.1000.
+
+Thu Jun 29 17:35:14 2023
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 9.7980.
+
+Thu Jun 29 17:35:22 2023
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 3.6770.
+
+Thu Jun 29 17:36:39 2023
+WARNING: Nan, Inf or huge value in QACC at DOF 1. The simulation is unstable. Time = 14.1910.
+
+Thu Jun 29 17:49:41 2023
+WARNING: mju_openResource: unknown file '../mjcpy/leg/le2'
+
+Wed Aug  9 16:02:00 2023
+WARNING: mju_openResource: unknown file '../mjcpy/twist/twist-v2.urdf'
+
