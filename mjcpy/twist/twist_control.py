@@ -153,8 +153,8 @@ class flight_ctrl:
     def spine_pd_control(self, model, data, qdes =  0, qdotdes = 0):
         q = data.qpos[model.joint("spine").id]
         qdot =  data.qvel[model.joint("spine").id]
-        Kp = 100
-        Kd = 20
+        Kp = 10
+        Kd = 2
         u = Kp*(qdes-q) + Kd*(qdotdes-qdot)
         data.ctrl[model.actuator("Spine Torque").id] = u
 
@@ -162,6 +162,21 @@ class flight_ctrl:
         delta_z = abs(stance - z)
         delta.append(delta_z[0,0])
         print(u)
+    
+    def roll_pd_control(self, model, data, qdes =  0, qdotdes = 0):
+        q = data.qpos[model.joint("x").id]
+        qdot =  data.qvel[model.joint("x").id]
+        Kp = 10
+        Kd = 2
+        u = Kp*(qdes-q) + Kd*(qdotdes-qdot)
+        data.ctrl[model.actuator("Roll Torque").id] = u
+
+        _,_,z  = forward_kinematics2(model, data,"FL")
+        delta_z = abs(stance - z)
+        delta.append(delta_z[0,0])
+        print(u)
+
+
         
 spine_phi = []
 numerator = []
@@ -214,7 +229,7 @@ class stance_ctrl:
         dX = get_vel(model, data, leg_id)
 
 
-        Kp = np.array([ 1000, 1000, 1500]) 
+        Kp = np.array([ 500, 1300, 1000]) 
         Kd = np.array([ 10, 10, 10 ])
 
         # print(X)
@@ -258,20 +273,23 @@ class stance_ctrl:
         
         # beta = 15
         # ka = 1
-        beta = 0
-        ka = 40
+        beta = 1
+        ka = 10
         #data.qpos[model.joint("spine").id]
         E =beta*zdot -ka*np.cos(phi)
         
         
-        data.ctrl[model.actuator("Spine Torque").id] = E
+        # data.ctrl[model.actuator("Spine Torque").id] = E
+        # data.ctrl[model.actuator("Roll Torque").id] = E
+        self.spine_pd_control(model, data)
+        self.roll_pd_control(model,data)
 
         # spine_phi.append(np.cos(phi)[0,0])
         spine_phi.append(E[0,0])
 
         numerator.append(((p-z))[0,0])
         denom.append(-zdot)
-        arctan.append((3*w*(p-z))[0,0]/-zdot)
+        arctan.append(np.cos(phi[0,0]))
     
     def spine_pd_control(self, model, data, qdes =  0, qdotdes = 0):
         q = data.qpos[model.joint("spine").id]
@@ -285,6 +303,18 @@ class stance_ctrl:
         delta_z = abs(stance - z)
         delta.append(delta_z[0,0])
 
+    def roll_pd_control(self, model, data, qdes =  0, qdotdes = 0):
+        q = data.qpos[model.joint("x").id]
+        qdot =  data.qvel[model.joint("x").id]
+        Kp = 290
+        Kd = 5
+        u = Kp*(qdes-q) + Kd*(qdotdes-qdot)
+        data.ctrl[model.actuator("Roll Torque").id] = u
+
+        _,_,z  = forward_kinematics2(model, data,"FL")
+        delta_z = abs(stance - z)
+        delta.append(delta_z[0,0])
+        print(u)
 
 
 
@@ -442,6 +472,7 @@ def spine_SLIP(model, data, stance_z = stance):
         flight.xyz_pose(model, data, "RR")
         
         flight.spine_pd_control(model, data, qdes= 0)
+        flight.roll_pd_control(model, data)
 
         # if data.ncon >= 2:
         if delta_z >= tol and (zdot1+zdot2)>0:
@@ -451,12 +482,17 @@ def spine_SLIP(model, data, stance_z = stance):
 
     elif mode == 1:
         
-        stance.xyz_pose(model, data, "FL")
+        stance.xyz_pose(model, data, "FL", pose= np.array([0, 0.01, -0.28]))
         # stance.xyz_pose(model, data, "FR", pose= np.array([ 0, 0, -0.15]))
         # stance.xyz_pose(model, data, "RL", pose= np.array([ 0, 0, -0.15]))
-        flight.FL_pose(model, data, "RL", np.array([1, 1.4, -2.6]))
-        flight.FL_pose(model, data, "FR", np.array([-1, 1.4, -2.6]))
-        stance.xyz_pose(model, data, "RR")
+
+        flight.FL_pose(model, data, "RL", np.array([1, 1.4, -2.8]))
+        flight.FL_pose(model, data, "FR", np.array([-1, 1.4, -2.8]))
+
+        # stance.FL_pose(model, data, "RL", np.array([1, 1.4, -2.6]))
+        # stance.FL_pose(model, data, "FR", np.array([-1, 1.4, -2.6]))
+
+        stance.xyz_pose(model, data, "RR", pose = np.array([0, -0.01, -0.28]))
         stance.spine_AD(model, data)
 
         # FL_pose(model, data, "FL", np.array([-0.2, 0.8, -1.6]))
@@ -483,34 +519,42 @@ def controller(model, data):
     
     # FL_pose(model, data, "FL", np.array([-0.2, 0.8, -1.6]))
 
-    # xyz_pose(model, data, "FL")
-    # xyz_pose(model, data, "FR", pose= np.array([ 0, 0, -0.15]))
-    # xyz_pose(model, data, "RL", pose= np.array([ 0, 0, -0.15]))
-    # xyz_pose(model, data, "RR")
+
 
     flight = flight_ctrl()
     # flight.FL_pose(model, data, "FL", np.array([0, 0.8, -1.6]))
     # flight.FL_pose(model, data, "RL", np.array([0, 2.4, -1.54]))
     # flight.FL_pose(model, data, "FR", np.array([0, 2.4, -1.54]))
     # flight.FL_pose(model, data, "RR", np.array([0, 0.8, -1.6]))
-    
-    
+
+    # flight.xyz_pose(model, data, "FL")
+    # flight.xyz_pose(model, data, "FR", pose= np.array([ 0, 0, -0.15]))
+    # flight.xyz_pose(model, data, "RL", pose= np.array([ 0, 0, -0.15]))
+    # flight.xyz_pose(model, data, "RR")
+    # flight.spine_pd_control(model, data, qdes=-0.2)
+    # flight.roll_pd_control(model, data, qdes= 0.2)
 
 
     stance = stance_ctrl()
-    # stance.FL_pose(model, data, "FL", np.array([0, 0.8, -1.6]))
+
+    # stance.FL_pose(model, data, "FL", np.array([-0.1, 0.8, -1.6]))
     # stance.FL_pose(model, data, "RL", np.array([0, 2.4, -1.54]))
     # stance.FL_pose(model, data, "FR", np.array([0, 2.4, -1.54]))
-    # stance.FL_pose(model, data, "RR", np.array([0, 0.8, -1.6]))
+    # stance.FL_pose(model, data, "RR", np.array([0.1, 0.8, -1.6]))
+
+    # stance.spine_pd_control(model, data, qdes= 0.2)
+    # stance.roll_pd_control(model, data, qdes=-0.2)
+
     # stance.xyz_pose(model, data, "FL")
     # stance.xyz_pose(model, data, "FR", pose= np.array([ 0, 0, -0.15]))
     # stance.xyz_pose(model, data, "RL", pose= np.array([ 0, 0, -0.15]))
     # stance.xyz_pose(model, data, "RR")
+
     # # # print(data.ncon)
     # spine_AD(model, data)
     spine_SLIP(model, data)
     # stance.spine_pd_control(model, data, qdes = 0)
-    
+    print(forward_kinematics2(model, data, "FL")[1])
     # print(data.ncon)
     
     
@@ -697,7 +741,8 @@ axs[0,1].plot(numerator)
 axs[0, 1].set_title('p-z')
 axs[1,1].plot(denom)
 axs[1, 1].set_title('zdot')
-axs[2,1].plot(numerator, denom)
+# axs[2,1].plot(numerator, denom)
+axs[2,1].plot(arctan)
 axs[2, 1].set_title('arc tan(theta)')
 plt.legend()
 plt.show()

@@ -136,6 +136,8 @@
 
   <actuator>
 		<motor joint="spine" name="Spine Torque"/>
+
+    <motor joint="x" name="Roll Torque"/>
     
 		<motor joint="joint_8" name="FL Abductor"/>
     <motor joint="joint_1" name="FL Lower"/>

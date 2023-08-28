@@ -763,3 +763,24 @@ ERROR: mjv_updateSceneState: m->nu changed
 Fri Aug 25 17:18:28 2023
 ERROR: mjv_updateSceneState: m->nu changed
 
+Mon Aug 28 16:10:28 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Mon Aug 28 16:22:37 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Mon Aug 28 17:25:30 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Mon Aug 28 17:37:55 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Mon Aug 28 17:39:01 2023
+WARNING: Nan, Inf or huge value in QACC at DOF 9. The simulation is unstable. Time = 3.1150.
+
+Mon Aug 28 17:41:26 2023
+ERROR: Python exception raised
+
+Mon Aug 28 17:41:41 2023
+ERROR: Python exception raised
+
