@@ -9,7 +9,7 @@
 		<headlight ambient="0.3 0.3 0.3" />
 	</visual>
   <worldbody>
-    <geom type="plane" size="1 1 0.1" rgba="0.9 0 0 1" pos="0 0 -0.38" contype="4" conaffinity="8"/>
+    <geom type="plane" size="1 1 0.1" rgba="0.9 0 0 1" pos="0 0 -0.4" contype="4" conaffinity="8"/>
     <body name="ROBOT BODY" >
       <!-- <joint type="free"/> -->
 			<joint name="z" type="slide"  axis="0 0 1" />
@@ -33,7 +33,7 @@
 
         <body name="hip0" pos="0.353 0.095 0">
         <inertial pos="0 -0.03 0" quat="0.5 0.5 -0.5 0.5" mass="1.15" diaginertia="0.00277437 0.00237427 0.00133927"/>
-        <joint name="joint_8" pos="0 0 0" axis="1 0 0" range="-0.707 0.707"/>
+        <joint name="joint_8" pos="0 0 0" axis="1 0 0" range="-1.2 1.2"/>
         <geom size="0.055 0.02" pos="0 0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 -0.032 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0.8 1"/>
@@ -56,7 +56,7 @@
 
       <body name="hip2" pos="0.353 -0.095 0">
         <inertial pos="0 0.03 0" quat="0.5 0.5 -0.5 0.5" mass="1.15" diaginertia="0.00277437 0.00237427 0.00133927"/>
-        <joint name="joint_10" pos="0 0 0" axis="1 0 0" range="-0.707 0.707"/>
+        <joint name="joint_10" pos="0 0 0" axis="1 0 0" range="-1.2 1.2"/>
         <geom size="0.055 0.02" pos="0 -0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 -0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 0.032 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0.8 1"/>
@@ -87,7 +87,7 @@
       
       <body name="hip1" pos="-0.1855 0.095 0">
         <inertial pos="0 -0.03 0" quat="0.5 0.5 -0.5 0.5" mass="1.15" diaginertia="0.00277437 0.00237427 0.00133927"/>
-        <joint name="joint_9" pos="0 0 0" axis="1 0 0" range="-0.707 0.707"/>
+        <joint name="joint_9" pos="0 0 0" axis="1 0 0" range="-1.2 1.2"/>
         <geom size="0.055 0.02" pos="0 0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 -0.032 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0.8 1"/>
@@ -109,7 +109,7 @@
 
       <body name="hip3" pos="-0.1855 -0.095 0">
         <inertial pos="0 0.03 0" quat="0.5 0.5 -0.5 0.5" mass="1.15" diaginertia="0.00277437 0.00237427 0.00133927"/>
-        <joint name="joint_11" pos="0 0 0" axis="1 0 0" range="-0.707 0.707"/>
+        <joint name="joint_11" pos="0 0 0" axis="1 0 0" range="-1.2 1.2"/>
         <geom size="0.055 0.02" pos="0 -0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 -0.028 0" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0.8 0.8 0 1"/>
         <geom size="0.055 0.02" pos="0 0.032 0" quat="0.707107 0.707107 0 0" type="cylinder" contype="0" conaffinity="0" group="1" density="0" rgba="0.8 0.8 0.8 1"/>
@@ -125,6 +125,7 @@
             <geom size="0.013 0.103" pos="-0.103 0 0" quat="0.707107 0 0.707107 0" type="cylinder" contype="1" conaffinity="0" group="1" density="0" rgba="0.68 0.68 0.68 1"/>
             <geom size="0.013 0.103" pos="-0.103 0 0" quat="0.707107 0 0.707107 0" type="cylinder" rgba="0.68 0.68 0.68 1"/>
             <geom size="0.02" pos="-0.206 0 0"  condim="1" contype="8" conaffinity="0" group="1" density="0" rgba="0.1 0.1 0.1 1"/>
+            <!-- <geom size="0.02" pos="-0.206 0 0" rgba="0.1 0.1 0.1 1"/> -->
           </body>
         </body>
       </body>

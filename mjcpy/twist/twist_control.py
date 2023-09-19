@@ -83,6 +83,12 @@ lasty = 0
 
 stance = -0.28
 
+
+spine_phi = []
+numerator = []
+denom = []
+arctan = []
+energy=[]
 class flight_ctrl:
     def __init__(self):
         self.nominal_z = stance
@@ -131,7 +137,7 @@ class flight_ctrl:
         dX = get_vel(model, data, leg_id)
 
 
-        Kp = np.array([ 1000, 1000, 500]) 
+        Kp = np.array([ 1000, 1000, 2000])   #changed gains to 2000 worked, was 1500 before
         Kd = np.array([ 10, 10, 10 ])
 
         # print(X)
@@ -153,24 +159,42 @@ class flight_ctrl:
     def spine_pd_control(self, model, data, qdes =  0, qdotdes = 0):
         q = data.qpos[model.joint("spine").id]
         qdot =  data.qvel[model.joint("spine").id]
-        Kp = 10
+        Kp = 50
         Kd = 2
         u = Kp*(qdes-q) + Kd*(qdotdes-qdot)
         data.ctrl[model.actuator("Spine Torque").id] = u
 
         _,_,z  = forward_kinematics2(model, data,"FL")
+        spine_phi.append(u)
+        # print(u)
         delta_z = abs(stance - z)
         delta.append(delta_z[0,0])
-        print(u)
+
+        leg1 = Leg_id(model, "FL")
+        leg2 = Leg_id(model, "RR")
+
+        _,_,z1  = forward_kinematics2(model, data, "FL")
+        _,_,z2 = forward_kinematics2(model, data, "RR")
+        J1 = Jq_c(model, data, "FL")
+        J2 = Jq_c(model, data, "RR")
+
+        dX1 = J1 @ data.qvel[leg1.abd_id:leg1.Lower_id+1]
+        dX2 = J2 @ data.qvel[leg2.abd_id:leg2.Lower_id+1]
+        
+        z = 0.5*(z1+z2)
+        zdot = 0.5*(dX1[2] + dX2[2])
+
+        p = stance
+        w = 14       
+        numerator.append((w*(p-z))[0,0])
+        denom.append(-zdot)
+
     
 
 
 
         
-spine_phi = []
-numerator = []
-denom = []
-arctan = []
+
 
 class stance_ctrl:
     def __init__(self):
@@ -219,8 +243,8 @@ class stance_ctrl:
         dX = get_vel(model, data, leg_id)
 
 
-        Kp = np.array([ 1000, 1000, 2000]) 
-        Kd = np.array([ 10, 10, 5 ])
+        Kp = np.array([ 1000, 1000, 2000])  #changed gains to 2000 worked, was 1500 before
+        Kd = np.array([ 10, 10, 10 ])
 
         # print(X)
         # print(pose)
@@ -259,7 +283,7 @@ class stance_ctrl:
         p = stance_z
         w = 14
         phi = np.arctan2( w*(p-z),-zdot) # INCLUDE mb?
-        delta_z = stance_z - 0.5*(z1+z2)
+        delta_z = abs(stance_z - 0.5*(z1+z2))
         delta.append(delta_z[0,0])
 
         
@@ -268,19 +292,31 @@ class stance_ctrl:
         beta = 1
         ka = 15
         #data.qpos[model.joint("spine").id]
-        E =  -beta*zdot -ka*np.cos(phi)
+        E =  (-beta*zdot -ka*np.cos(phi))
+
+        #Feed forward term fails if constraint on roll and alpha removed
+        width = 0.22
+        g = 9.81
+        m = 14
+        kp_s = 1
+
+        ff = 12#(m * g /2) * ((width/2) * np.cos(alpha/2)) 
         
         
-        data.ctrl[model.actuator("Spine Torque").id] = E -12
+        data.ctrl[model.actuator("Spine Torque").id] = E - ff #+ kp_s*(0- alpha)
 
 
         # spine_phi.append(np.cos(phi)[0,0])
         spine_phi.append(E[0,0])
 
-        numerator.append(((p-z))[0,0])
+        numerator.append((w*(p-z))[0,0])
         denom.append(-zdot)
-        arctan.append(np.cos(phi[0,0]))
+
+        e = 6.5*zdot**2 + w*w*abs(p-z)
+        energy.append(e[0,0])
+        arctan.append(phi[0,0])
     
+
     def spine_pd_control(self, model, data, qdes =  0, qdotdes = 0):
         q = data.qpos[model.joint("spine").id]
         qdot =  data.qvel[model.joint("spine").id]
@@ -440,6 +476,7 @@ def spine_SLIP(model, data, stance_z = stance):
     start = 0
     flight = flight_ctrl()
     stance = stance_ctrl()
+
     if mode == 0:
         
         flight.xyz_pose(model, data, "FL")
@@ -448,10 +485,14 @@ def spine_SLIP(model, data, stance_z = stance):
 
         flight.FL_pose(model, data, "RL", np.array([1, 1.4, -2.6]))
         flight.FL_pose(model, data, "FR", np.array([-1, 1.4, -2.6]))
+        # flight.xyz_pose(model, data, "FR")
+        # flight.xyz_pose(model, data, "RL")
 
         flight.xyz_pose(model, data, "RR")
-        
+       
+
         flight.spine_pd_control(model, data, qdes= 0)
+        
 
 
         # if data.ncon >= 2:
@@ -466,13 +507,20 @@ def spine_SLIP(model, data, stance_z = stance):
         # stance.xyz_pose(model, data, "FR", pose= np.array([ 0, 0, -0.15]))
         # stance.xyz_pose(model, data, "RL", pose= np.array([ 0, 0, -0.15]))
 
+       
+
+        # stance.xyz_pose(model, data, "FR")
+        # stance.xyz_pose(model, data, "RL")
+
+        # flight.xyz_pose(model, data, "FR")
+        # flight.xyz_pose(model, data, "RL")
+
         flight.FL_pose(model, data, "RL", np.array([1, 1.4, -2.6]))
         flight.FL_pose(model, data, "FR", np.array([-1, 1.4, -2.6]))
 
-        # stance.FL_pose(model, data, "RL", np.array([1, 1.4, -2.6]))
-        # stance.FL_pose(model, data, "FR", np.array([-1, 1.4, -2.6]))
-
         stance.xyz_pose(model, data, "RR")
+
+        # stance.spine_pd_control(model, data, qdes=-0.8)
         stance.spine_AD(model, data)
 
         # FL_pose(model, data, "FL", np.array([-0.2, 0.8, -1.6]))
@@ -530,12 +578,8 @@ def controller(model, data):
     # stance.xyz_pose(model, data, "RL", pose= np.array([ 0, 0, -0.15]))
     # stance.xyz_pose(model, data, "RR")
 
-    # # # print(data.ncon)
-    # spine_AD(model, data)
     spine_SLIP(model, data)
-    # stance.spine_pd_control(model, data, qdes = 0)
-    
-    # print(data.ncon)
+
     
     
 
@@ -697,7 +741,7 @@ with viewer.launch_passive(model, data) as viewer:
     # Example modification of a viewer option: toggle contact points every two seconds.
     with viewer.lock():
     #   viewer.opt.flags[mj.mjtVisFlag.mjVIS_CONTACTPOINT] = int(data.time % 2)
-      viewer.opt.flags[mj.mjtVisFlag.mjVIS_CONTACTFORCE] = 1
+      viewer.opt.flags[mj.mjtVisFlag.mjVIS_CONTACTFORCE] = 0
 
     # Pick up changes to the physics state, apply perturbations, update options from GUI.
     viewer.sync()
@@ -707,6 +751,8 @@ with viewer.launch_passive(model, data) as viewer:
     if time_until_next_step > 0:
       time.sleep(time_until_next_step)
 
+
+print( sum(spine_phi)/ len(spine_phi))
 fig, axs = plt.subplots(3,2)
 
 axs[0,0].plot(delta)
@@ -717,12 +763,18 @@ axs[1,0].plot(gt_modes, label="Mujoco detection")
 axs[2,0].plot(spine_phi)
 axs[2, 0].set_title('Angle')
 
-axs[0,1].plot(numerator)
-axs[0, 1].set_title('p-z')
-axs[1,1].plot(denom)
-axs[1, 1].set_title('zdot')
+axs[0,1].scatter(denom, numerator)
+axs[0, 1].set_title('w(p-z) vs -zdot')
+axs[0,1].axhline(-0.56)
+axs[0, 1].set_aspect('equal','box')
+# axs[0,1].set_ylim(-2,0)
+# axs[0,1].set_xlim(-1.5,1.5)
+# axs[0,1].axis('equal')
+
+axs[1,1].plot(energy)
+axs[1, 1].set_title('Energy')
 # axs[2,1].plot(numerator, denom)
 axs[2,1].plot(arctan)
-axs[2, 1].set_title('arc tan(theta)')
+axs[2, 1].set_title('phi = arc tan(w(p-z) / -zdot)')
 plt.legend()
 plt.show()
