@@ -820,3 +820,201 @@ ERROR: mjv_updateSceneState: m->nu changed
 Fri Sep  1 19:42:16 2023
 ERROR: mjv_updateSceneState: m->nu changed
 
+Fri Sep  1 20:03:08 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Fri Sep  1 20:03:21 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Fri Sep  1 20:11:18 2023
+ERROR: Python exception raised
+
+Fri Sep  1 20:19:47 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Fri Sep  1 20:21:52 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 17:34:15 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 17:35:44 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:00:42 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:02:19 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:04:06 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:07:42 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:12:02 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:13:29 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:25:32 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:27:17 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:33:31 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 18:45:28 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:00:20 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:08:09 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:09:38 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:15:06 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:16:20 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:16:28 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:22:47 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:38:26 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 19:58:23 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 20:11:51 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 20:11:56 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 20:18:47 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 20:19:30 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 20:21:58 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 20:34:01 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 20:54:36 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Sep  7 21:03:12 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 16:08:15 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 16:11:39 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 16:19:47 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 16:35:19 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 16:38:26 2023
+ERROR: Python exception raised
+
+Tue Sep 19 16:38:39 2023
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 1.4930.
+
+Tue Sep 19 17:05:49 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 17:17:27 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 17:18:30 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 18:12:03 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 18:13:22 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 18:14:37 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:17:20 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:18:20 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:19:26 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:21:50 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:22:45 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:22:59 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:23:10 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:32:19 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:33:17 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:34:16 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:37:25 2023
+ERROR: Python exception raised
+
+Tue Sep 19 18:40:37 2023
+ERROR: Python exception raised
+
+Tue Sep 19 19:42:28 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 19:42:32 2023
+ERROR: Python exception raised
+
+Tue Sep 19 19:42:38 2023
+ERROR: Python exception raised
+
+Tue Sep 19 19:42:44 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 19:49:15 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 19:57:57 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 20:05:43 2023
+ERROR: mjv_updateSceneState: m->nu changed
+
+Tue Sep 19 20:13:19 2023
+ERROR: mjv_updateSceneState: m->nu changed
+

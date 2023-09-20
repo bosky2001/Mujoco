@@ -272,8 +272,8 @@ class stance_ctrl:
 
     def spine_AD(self, model, data, stance_z = nominal_z):
     
-        _,_,z1  = forward_kinematics2(model, data, "FL")
-        _,_,z2 = forward_kinematics2(model, data, "RR")
+        _,y1,z1  = forward_kinematics2(model, data, "FL")
+        _,y2,z2 = forward_kinematics2(model, data, "RR")
         J1 = Jq_c(model, data, "FL")
         J2 = Jq_c(model, data, "RR")
         alpha = data.qpos[model.joint("spine").id]
@@ -305,12 +305,14 @@ class stance_ctrl:
         width = 0.22
         g = 9.81
         m = 14
-        kp_s = 1
+        kp_s = 5
 
-        ff = 12#(m * g /2) * ((width/2) * np.cos(alpha/2)) 
+        y = 0.5*(abs(y1) + abs(y2))
+
+        ff =  (m * g /2) * ((width/2) * np.cos(alpha/2) + y) 
+        print(ff)
         
-        
-        data.ctrl[model.actuator("Spine Torque").id] = E - ff #+ kp_s*(0- alpha)
+        data.ctrl[model.actuator("Spine Torque").id] = E - ff + kp_s*(0- alpha)
 
 
         # spine_phi.append(np.cos(phi)[0,0])
@@ -751,7 +753,7 @@ with viewer.launch_passive(model, data) as viewer:
     # Example modification of a viewer option: toggle contact points every two seconds.
     with viewer.lock():
     #   viewer.opt.flags[mj.mjtVisFlag.mjVIS_CONTACTPOINT] = int(data.time % 2)
-      viewer.opt.flags[mj.mjtVisFlag.mjVIS_CONTACTFORCE] = 0
+      viewer.opt.flags[mj.mjtVisFlag.mjVIS_CONTACTFORCE] = 1
 
     # Pick up changes to the physics state, apply perturbations, update options from GUI.
     viewer.sync()
@@ -762,7 +764,6 @@ with viewer.launch_passive(model, data) as viewer:
       time.sleep(time_until_next_step)
 
 
-print( sum(spine_phi)/ len(spine_phi))
 
 fig, axs = plt.subplots(3, sharex=True)
 
