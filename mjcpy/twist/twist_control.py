@@ -85,8 +85,13 @@ stance = -0.28
 
 
 spine_phi = []
-numerator = []
-denom = []
+body_zcom = []
+numerator_f = []
+denom_f = []
+
+numerator_s = []
+denom_s = []
+
 arctan = []
 energy=[]
 class flight_ctrl:
@@ -164,10 +169,11 @@ class flight_ctrl:
         u = Kp*(qdes-q) + Kd*(qdotdes-qdot)
         data.ctrl[model.actuator("Spine Torque").id] = u
 
-        _,_,z  = forward_kinematics2(model, data,"FL")
+        _,_,z1  = forward_kinematics2(model, data,"FL")
+        _,_,z2  = forward_kinematics2(model, data,"RR")
         spine_phi.append(u)
         # print(u)
-        delta_z = abs(stance - z)
+        delta_z = 0.5*(z1 + z2)
         delta.append(delta_z[0,0])
 
         leg1 = Leg_id(model, "FL")
@@ -186,8 +192,9 @@ class flight_ctrl:
 
         p = stance
         w = 14       
-        numerator.append((w*(p-z))[0,0])
-        denom.append(-zdot)
+        numerator_f.append((w*(p-z))[0,0])
+        denom_f.append(-zdot)
+        body_zcom.append(data.qpos[model.joint("z").id])  
 
     
 
@@ -283,10 +290,10 @@ class stance_ctrl:
         p = stance_z
         w = 14
         phi = np.arctan2( w*(p-z),-zdot) # INCLUDE mb?
-        delta_z = abs(stance_z - 0.5*(z1+z2))
+        delta_z = (0.5*(z1+z2))
         delta.append(delta_z[0,0])
 
-        
+        body_zcom.append(data.qpos[model.joint("z").id])        
         # beta = 15
         # ka = 1
         beta = 1
@@ -309,8 +316,8 @@ class stance_ctrl:
         # spine_phi.append(np.cos(phi)[0,0])
         spine_phi.append(E[0,0])
 
-        numerator.append((w*(p-z))[0,0])
-        denom.append(-zdot)
+        numerator_s.append((w*(p-z))[0,0])
+        denom_s.append(-zdot)
 
         e = 6.5*zdot**2 + w*w*abs(p-z)
         energy.append(e[0,0])
@@ -325,9 +332,11 @@ class stance_ctrl:
         u = Kp*(qdes-q) + Kd*(qdotdes-qdot)
         data.ctrl[model.actuator("Spine Torque").id] = u
 
-        _,_,z  = forward_kinematics2(model, data,"FL")
-        delta_z = abs(stance - z)
-        delta.append(delta_z[0,0])
+        # _,_,z1  = forward_kinematics2(model, data,"FL")
+        # _,_,z2  = forward_kinematics2(model, data,"RR")
+        # delta_z = 0.5*(z1+z2)
+        # delta.append(delta_z[0,0])
+        # body_zcom.append(data.qpos[model.joint("z").id])   
 
 
         
@@ -596,6 +605,7 @@ def init_controller(model,data):
     leg_init(model, data, np.array([-1, 1.4, -2.6]), "FR")
     leg_init(model, data, np.array([1, 1.4, -2.6]), "RL")
     leg_init(model, data, np.array([0, 0.8, -1.6]), "RR")
+    data.qpos[0] = 0.4
     
 
 
@@ -753,28 +763,38 @@ with viewer.launch_passive(model, data) as viewer:
 
 
 print( sum(spine_phi)/ len(spine_phi))
-fig, axs = plt.subplots(3,2)
 
-axs[0,0].plot(delta)
-axs[0, 0].set_title('Leg Compression "FL"')
-axs[1,0].plot(modes, label="Tolerance detection")
-axs[1, 0].set_title('Modes')
-axs[1,0].plot(gt_modes, label="Mujoco detection")
-axs[2,0].plot(spine_phi)
-axs[2, 0].set_title('Angle')
+fig, axs = plt.subplots(3, sharex=True)
 
-axs[0,1].scatter(denom, numerator)
-axs[0, 1].set_title('w(p-z) vs -zdot')
-axs[0,1].axhline(-0.56)
-axs[0, 1].set_aspect('equal','box')
+axs[0].plot(delta)
+axs[0].set_title('Average Leg Compression ')
+axs[1].plot(modes, label="Tolerance detection")
+axs[1].set_title('Modes')
+# axs[1].plot(gt_modes, label="Mujoco detection")
+# axs[2,0].plot(spine_phi)
+axs[2].plot(body_zcom, label="Body-Zcom")
+axs[2].plot(-1*np.array(delta), label="Z average")
+axs[2].legend()
+axs[2].set_title('Body_Zcom')
+
+
+fig, axs = plt.subplots(3)
+axs[0].scatter(denom_f, numerator_f, label="Flight")
+axs[0].scatter(denom_s, numerator_s, label="Stance")
+axs[0].set_title('w(p-z) vs -zdot')
+axs[0].axhline(-0.56)
+axs[0].set_aspect('equal','box')
+axs[0].legend()
 # axs[0,1].set_ylim(-2,0)
 # axs[0,1].set_xlim(-1.5,1.5)
 # axs[0,1].axis('equal')
 
-axs[1,1].plot(energy)
-axs[1, 1].set_title('Energy')
+axs[1].plot(energy)
+axs[1].set_title('Energy')
 # axs[2,1].plot(numerator, denom)
-axs[2,1].plot(arctan)
-axs[2, 1].set_title('phi = arc tan(w(p-z) / -zdot)')
-plt.legend()
+axs[2].plot(arctan)
+axs[2].set_title('phi = arc tan(w(p-z) / -zdot)')
+
+
+
 plt.show()

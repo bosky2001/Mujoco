@@ -9,7 +9,7 @@
 		<headlight ambient="0.3 0.3 0.3" />
 	</visual>
   <worldbody>
-    <geom type="plane" size="1 1 0.1" rgba="0.9 0 0 1" pos="0 0 -0.4" contype="4" conaffinity="8"/>
+    <geom type="plane" size="1 1 0.1" rgba="0.9 0 0 1" pos="0 0 0" contype="4" conaffinity="8"/>
     <body name="ROBOT BODY" >
       <!-- <joint type="free"/> -->
 			<joint name="z" type="slide"  axis="0 0 1" />
