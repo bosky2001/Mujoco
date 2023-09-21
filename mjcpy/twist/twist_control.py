@@ -175,6 +175,7 @@ class flight_ctrl:
         # print(u)
         delta_z = 0.5*(z1 + z2)
         delta.append(delta_z[0,0])
+        # delta.append()
 
         leg1 = Leg_id(model, "FL")
         leg2 = Leg_id(model, "RR")
@@ -292,19 +293,20 @@ class stance_ctrl:
         phi = np.arctan2( w*(p-z),-zdot) # INCLUDE mb?
         delta_z = (0.5*(z1+z2))
         delta.append(delta_z[0,0])
+        # delta.append(z2[0,0])
 
         body_zcom.append(data.qpos[model.joint("z").id])        
         # beta = 15
         # ka = 1
         beta = 1
-        ka = 15
+        ka = 16
         #data.qpos[model.joint("spine").id]
         E =  (-beta*zdot -ka*np.cos(phi))
 
         #Feed forward term fails if constraint on roll and alpha removed
-        width = 0.22
+        width = 0.24
         g = 9.81
-        m = 14
+        m = 16
         kp_s = 5
 
         y = 0.5*(abs(y1) + abs(y2))
@@ -316,7 +318,7 @@ class stance_ctrl:
 
 
         # spine_phi.append(np.cos(phi)[0,0])
-        spine_phi.append(E[0,0])
+        spine_phi.append((E - ff + kp_s*(0- alpha))[0,0])
 
         numerator_s.append((w*(p-z))[0,0])
         denom_s.append(-zdot)
@@ -774,7 +776,7 @@ axs[1].set_title('Modes')
 # axs[1].plot(gt_modes, label="Mujoco detection")
 # axs[2,0].plot(spine_phi)
 axs[2].plot(body_zcom, label="Body-Zcom")
-axs[2].plot(-1*np.array(delta), label="Z average")
+axs[2].plot(-1*np.array(delta), label="Leg z average")
 axs[2].legend()
 axs[2].set_title('Body_Zcom')
 
@@ -783,6 +785,8 @@ fig, axs = plt.subplots(3)
 axs[0].scatter(denom_f, numerator_f, label="Flight")
 axs[0].scatter(denom_s, numerator_s, label="Stance")
 axs[0].set_title('w(p-z) vs -zdot')
+axs[0].set_ylabel("w(p-z)")
+axs[0].set_xlabel("-zdot")
 axs[0].axhline(-0.56)
 axs[0].set_aspect('equal','box')
 axs[0].legend()
@@ -790,12 +794,13 @@ axs[0].legend()
 # axs[0,1].set_xlim(-1.5,1.5)
 # axs[0,1].axis('equal')
 
-axs[1].plot(energy)
+axs[1].plot(spine_phi)
 axs[1].set_title('Energy')
 # axs[2,1].plot(numerator, denom)
 axs[2].plot(arctan)
 axs[2].set_title('phi = arc tan(w(p-z) / -zdot)')
-
+plt.subplots_adjust(
+                    hspace=0.4)
 
 
 plt.show()
