@@ -81,7 +81,7 @@ button_right = False
 lastx = 0
 lasty = 0
 
-stance = -0.28
+stance = -0.3
 
 
 spine_phi = []
@@ -592,6 +592,7 @@ def controller(model, data):
     # stance.xyz_pose(model, data, "RR")
 
     spine_SLIP(model, data)
+
 
     
     
